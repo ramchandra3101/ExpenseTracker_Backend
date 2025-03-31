@@ -24,4 +24,4 @@ const authMiddileWare = async(res, req, next) => {
     }
 };
 
-export default authMiddileWare;
+export default authMiddileWare

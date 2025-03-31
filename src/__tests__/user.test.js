@@ -48,7 +48,7 @@ describe("User Creation", () => {
          const [results, metadata] = await sequelize.query(
              "SELECT * FROM expensestrack.users WHERE username = 'testuser2unique'", 
          );
-         console.log("Query Results:", results);
+         
         // // Check if results array exists and contains records
         expect(results).toBeDefined();
       
@@ -61,66 +61,67 @@ describe("User Creation", () => {
         expect(dbUser.first_name).toBe(userData.first_name);
         expect(dbUser.last_name).toBe(userData.last_name);
     });
-    // test("Should validate the password correctly", async () => {
-    //     const userData = {
-    //         userName : "testuser2",
-    //         firstName: "Test",
-    //         lastName: "User",
-    //         email:"test2@example.com",
-    //         password_hash: "password123",
-    //     };
-    //     const user = await User.create(userData);
-    //     const isValidPassword = await user.validatePassword("password123");
-    //     expect(isValidPassword).toBe(true);
-    //     const isInvalidPassword = await user.validatePassword("wrongpassword");
-    //     expect(isInvalidPassword).toBe(false);;
-    //     });
+    test("Should validate the password correctly", async () => {
+        const userData = {
+            username : "testuser2",
+            first_name: "Test",
+            last_name: "User",
+            email:"test2@example.com",
+            password_hash: "password123",
+        };
+        const user = await User.create(userData);
+        expect(user).toBeDefined();
+        const isValidPassword = await user.validatePassword("password123");
+        expect(isValidPassword).toBe(true);
+        const isInvalidPassword = await user.validatePassword("wrongpassword");
+        expect(isInvalidPassword).toBe(false);;
+    });
 
-    // test("Should Update Password and hash it", async () => {  
-    //     const user = await User.create({
-    //         userName : "testuser3",
-    //         firstName: "Test",
-    //         lastName: "User",
-    //         email:"test3@example.com",
-    //         password_hash: "password123",
-    //     })
-    //     const oldPasswordHash = user.password_hash;
-    //     user.password_hash = "newpassword123";
-    //     await user.save();
+    test("Should Update Password and hash it", async () => {  
+        const user = await User.create({
+            username : "testuser3",
+            first_name: "Test",
+            last_name: "User",
+            email:"test3@example.com",
+            password_hash: "password123",
+        })
+        const oldPasswordHash = user.password_hash;
+        user.password_hash = "newpassword123";
+        await user.save();
 
-    //     expect(user.password_hash).not.toBe(oldPasswordHash);
-    //     const isValidPassword = await user.validatePassword("newpassword123");
-    //     expect(isValidPassword).toBe(true);
-    // });
+        expect(user.password_hash).not.toBe(oldPasswordHash);
+        const isValidPassword = await user.validatePassword("newpassword123");
+        expect(isValidPassword).toBe(true);
+    });
 
-    // test("Should enforce unique email and username", async () => {
-    //     const userData = {
-    //         username: "uniqueuser",
-    //         firstName: "Unique",
-    //         lastName: "User",
-    //         email: "unique@example.com",
-    //         password_hash: "uniquePassword",
-    //     };
-    //     await User.create(userData);
-    //     await expect(
-    //         User.create({
-    //             username : "anotheruser",
-    //             firstName: "Unique",
-    //             lastName: "User",
-    //             email: "unique@example.com",
-    //             password_hash: "anotherPassword"
-    //         })
-    //     ).rejects.toThrow();
+     test("Should enforce unique email and username", async () => {
+        const userData = {
+            username: "uniqueuser",
+            first_name: "Unique",
+            last_name: "User",
+            email: "unique@example.com",
+            password_hash: "uniquePassword",
+        };
+        await User.create(userData);
+        await expect(
+            User.create({
+                username : "anotheruser",
+                first_name: "Unique",
+                last_name: "User",
+                email: "unique@example.com",
+                password_hash: "anotherPassword"
+            })
+        ).rejects.toThrow();
 
-    //     await expect(
-    //         User.create({
-    //             username: "uniqueuser",
-    //             firstName: "Unique",
-    //             lastName: "User",
-    //             email:"another@example.com",
-    //             password_hash: "Password123"
-    //         })
-    //     ).rejects.toThrow();
-    // });
+        await expect(
+            User.create({
+                username: "uniqueuser",
+                first_name: "Unique",
+                last_name: "User",
+                email:"another@example.com",
+                password_hash: "Password123"
+            })
+        ).rejects.toThrow();
+     });
 });
 
