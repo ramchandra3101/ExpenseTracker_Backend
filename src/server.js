@@ -3,13 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { sequelize, connectDB } from './config/db.config.js';
 import authRoutes from './routes/authRoutes.js';
-import authMiddileWare from './middleware/auth.js';
+import authenticate from './middleware/auth.js';
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(authMiddileWare);
+
 
 
 
@@ -26,7 +26,8 @@ app.use((err,req,res,next)=>{
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user', authRoutes);
+app.use(authenticate);
+
 
 
 const startServer = async () => {

@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Sequelize } from "@sequelize/core";
-import { PostgresDialect} from "@sequelize/postgres";
+import {Sequelize}  from "@sequelize/core";
+import { PostgresDialect } from "@sequelize/postgres";
+
+
 
 console.log("DB Config:", {
     DB_NAME: process.env.DB_NAME ,
@@ -20,8 +22,7 @@ export const sequelize = new Sequelize({
     port: 5432,
     logging: console.log,
     schema: process.env.DB_SCHEMA,
-}
-);
+});
 
 export const connectDB = async () => {
     try{

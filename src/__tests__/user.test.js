@@ -1,7 +1,13 @@
 import {sequelize} from "../config/db.config";
 import User from "../models/User";
 
+
+
+
 describe("User Creation", () => {
+
+
+
     beforeAll(async () => {
         await sequelize.sync({ force: true });
     });
@@ -9,6 +15,8 @@ describe("User Creation", () => {
     afterAll(async () => {
         await sequelize.close();
     });
+
+   
 
     test("Should create a new user", async () => {
         const userData = {
