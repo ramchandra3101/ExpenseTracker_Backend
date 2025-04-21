@@ -5,7 +5,8 @@ import {Op} from "@sequelize/core"
 //Create new category
 export const createCategory = async (req, res) => {
     try{
-        const user_id = req.user_id;
+        
+        const user_id = req.user.user_id;
         const {name, icon, color, is_default,is_income} = req.body;
 
         if(!name) {
@@ -15,6 +16,8 @@ export const createCategory = async (req, res) => {
             });
         }
         //Check if Category
+        
+        
         const existingCategory = await Category.findOne({
             where: {
                 name,
@@ -27,6 +30,7 @@ export const createCategory = async (req, res) => {
                 message: "A category with this name already exists"
             });
         }
+       
 
         //Creating category
         const category = await Category.create({
@@ -55,7 +59,8 @@ export const createCategory = async (req, res) => {
 
 export const getUserCategories = async (req,res) => {
     try{
-        const user_id = req.user_id;
+        const user_id = req.user.user_id;
+        console.log(user_id)
         const {is_income} = req.query;
         const where = {user_id: user_id};
         if (is_income !== undefined) {
@@ -146,6 +151,7 @@ export const updateCategory = async(req,res) => {
 export const deleteCategory = async (req, res) => {
     try {
         const { id } = req.params;
+        
 
         const category = await Category.findOne({
             where: {

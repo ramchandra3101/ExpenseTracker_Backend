@@ -27,7 +27,8 @@ const authenticate = async(req, res, next) => {
         }
         // Verify token
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = {id: decoded.id};
+        req.user_id = decoded.id;
+        req.user = {user_id: decoded.id};
         next();
 
 

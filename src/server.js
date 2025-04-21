@@ -3,6 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { sequelize, connectDB } from './config/db.config.js';
 import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import expenseRoutes from './routes/expenseRoutes.js';
+import paymentMethodRoutes from './routes/paymentMethodRoutes.js';
+
 import authenticate from './middleware/auth.js';
 dotenv.config();
 
@@ -26,9 +30,15 @@ app.use((err,req,res,next)=>{
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', authenticate, categoryRoutes);
+app.use('/api/expenses', authenticate, expenseRoutes);
+app.use('/api/payment-methods', authenticate, paymentMethodRoutes);
 app.use(authenticate);
 
-
+app.use((err,req,res,next)=>{
+    console.log(err.stack);
+    res.status(500).send({message: 'Something went wrong', error: err.message});
+});
 
 const startServer = async () => {
     const isConnected = await connectDB();

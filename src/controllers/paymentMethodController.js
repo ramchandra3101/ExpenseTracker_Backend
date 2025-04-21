@@ -1,10 +1,10 @@
 import PaymentMethod from "../models/PaymentMethod.js";
 import {Op} from "@sequelize/core";
 
-export const getAllPaymentMethods = async (requestAnimationFrame,res) => {
+export const getAllPaymentMethods = async (req,res) => {
     try{
         const paymentMethods = await PaymentMethod.findAll({
-            where: {user_id: req.user.user_id},
+            where: {user_id: req.user_id},
             order: [["name", "ASC"]],
         });
 
@@ -25,7 +25,7 @@ export const getAllPaymentMethods = async (requestAnimationFrame,res) => {
 export const getPaymentMethodById = async(req,res)=> {
     try{
         const {id} = req.params;
-        const paymentMethod = await PaymentMethod.findone({
+        const paymentMethod = await PaymentMethod.findOne({
             where: {
                 payment_method_id: id,
                 user_id: req.user.user_id
@@ -55,7 +55,7 @@ export const getPaymentMethodById = async(req,res)=> {
 export const createPaymentmethod = async (req,res) => {
     try {
         const { name, type, bank_name} = req.body;
-        if(!name | !type) {
+        if(!name || !type) {
             return res.status(400).json({
                 success:false,
                 message:"Name and type are required"
