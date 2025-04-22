@@ -30,11 +30,14 @@ export const createCategory = async (req, res) => {
                 message: "A category with this name already exists"
             });
         }
+        const timestamp = new Date().getTime();
+        const category_id = `${user_id}_cat_${timestamp}`;
        
 
         //Creating category
         const category = await Category.create({
-            user_id : user_id,
+            category_id,
+            user_id: user_id,
             name,
             icon:icon || null,
             color:color || null,
@@ -60,7 +63,8 @@ export const createCategory = async (req, res) => {
 export const getUserCategories = async (req,res) => {
     try{
         const user_id = req.user.user_id;
-        console.log(user_id)
+
+        //console.log(user_id)
         const {is_income} = req.query;
         const where = {user_id: user_id};
         if (is_income !== undefined) {
@@ -91,6 +95,7 @@ export const updateCategory = async(req,res) => {
     try {
         const {id} = req.params;
         const { name, icon, color, is_default, is_income } = req.body;
+        const user_id = req.user.user_id;
 
         const category = await Category.findOne({
             where: {

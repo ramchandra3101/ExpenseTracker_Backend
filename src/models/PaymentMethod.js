@@ -3,8 +3,7 @@ import {sequelize} from '../config/db.config.js';
 
 const PaymentMethod = sequelize.define('payment_method', {
     payment_method_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.STRING,
         primaryKey: true
     },
     user_id: {
@@ -26,6 +25,14 @@ const PaymentMethod = sequelize.define('payment_method', {
 },
 {
     timestamps: true,
+    hooks: {
+        beforeValidate: (paymentMethod) => {
+            if (!paymentMethod.payment_method_id) {
+                const timestamp = new Date().getTime();
+                paymentMethod.payment_method_id = `${paymentMethod.user_id}_pm_${timestamp}`;
+            }
+        }
+    }
 
 });
 

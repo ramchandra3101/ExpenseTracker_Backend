@@ -22,16 +22,18 @@ Expense.belongsTo(User, {
     foreignKey: 'user_id',
 });
 
-//One category has many expenses
+// One category has many expenses
 Category.hasMany(Expense, {
     foreignKey: 'category',
     sourceKey: 'category_id',
-
-});
-Expense.belongsTo(Category, {
+  });
+  
+  // Each expense belongs to one category
+  Expense.belongsTo(Category, {
     foreignKey: 'category',
     targetKey: 'category_id',
-});
+  });
+  
 
 
 //One paymentMethod used for many expenses

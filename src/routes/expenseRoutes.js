@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Routes
 router.get('/', getAllExpenses);
-router.post('/', createExpense);
+router.post('/create', createExpense);
 router.put('/:id', updateExpense);
 router.delete('/:id', deleteExpense);
 

@@ -4,8 +4,7 @@ import {sequelize} from '../config/db.config.js';
 
 const Expense = sequelize.define('expense', {
     expense_id :{
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.STRING,
         primaryKey: true
     },
     user_id: {
@@ -13,11 +12,12 @@ const Expense = sequelize.define('expense', {
         allowNull: false,
     },
     category: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
+        
     },
     payment_method_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     amount: {
@@ -58,6 +58,14 @@ const Expense = sequelize.define('expense', {
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    hooks: {
+        beforeValidate: (expense) => {
+            if (!expense.expense_id) {
+                const timestamp = new Date().getTime();
+                expense.expense_id = `${expense.user_id}_exp_${timestamp}`;
+            }
+        }
+    }
 
 });
 

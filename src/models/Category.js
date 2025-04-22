@@ -4,9 +4,10 @@ import { sequelize } from "../config/db.config.js";
 
 const Category = sequelize.define('category', {
     category_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+        type: DataTypes.STRING,
+        primaryKey: true,
+        allowNull: false,
+
     },
 
     user_id: {
@@ -36,6 +37,14 @@ const Category = sequelize.define('category', {
 },
 {
     timestamps: true,
+    hooks:{
+        beforeValidate:(category)=>{
+            if (!category.categpry_id){
+                const tiemstamp = new Date().getTime();
+                category.category_id = `${category.user_id}_cat_${tiemstamp}`;
+            }
+        }
+    }
 
 })
 

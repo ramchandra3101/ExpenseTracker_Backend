@@ -43,12 +43,13 @@ app.use((err,req,res,next)=>{
 const startServer = async () => {
     const isConnected = await connectDB();
     const PORT = process.env.PORT || 8001;
+    const IP_ADDRESS = process.env.IP_ADDRESS
     if (isConnected) {
         try{
             await sequelize.sync({alter: true});
             console.log('Database synced successfully');
 
-            app.listen(PORT, () =>{
+            app.listen(PORT,IP_ADDRESS, () =>{
             console.log(`Server is running on port ${PORT}`);
          });
         } catch (error) {

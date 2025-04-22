@@ -3,8 +3,9 @@ import {Op} from "@sequelize/core";
 
 export const getAllPaymentMethods = async (req,res) => {
     try{
+        const user_id = req.user.user_id;
         const paymentMethods = await PaymentMethod.findAll({
-            where: {user_id: req.user_id},
+            where: {user_id: user_id},
             order: [["name", "ASC"]],
         });
 
@@ -25,10 +26,18 @@ export const getAllPaymentMethods = async (req,res) => {
 export const getPaymentMethodById = async(req,res)=> {
     try{
         const {id} = req.params;
+        const user_id = req.user.user_id;
+        if (!id.startsWith(`${user_id}_pm_`)) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized access to this payment method"
+            });
+        }
+
         const paymentMethod = await PaymentMethod.findOne({
             where: {
                 payment_method_id: id,
-                user_id: req.user.user_id
+                user_id: user_id
             }
         });
         if(!paymentMethod) {
@@ -55,6 +64,7 @@ export const getPaymentMethodById = async(req,res)=> {
 export const createPaymentmethod = async (req,res) => {
     try {
         const { name, type, bank_name} = req.body;
+        const user_id = req.user.user_id;
         if(!name || !type) {
             return res.status(400).json({
                 success:false,
@@ -65,7 +75,7 @@ export const createPaymentmethod = async (req,res) => {
         const existingPayment = await PaymentMethod.findOne({
             where: {
                 name,
-                user_id: req.user.user_id
+                user_id: user_id
             }
         });
         if(existingPayment) {
@@ -75,11 +85,16 @@ export const createPaymentmethod = async (req,res) => {
             });
         }
 
+        const timestamp = new Date().getTime();
+        const payment_method_id = `${user_id}_pm_${timestamp}`;
+
+
         const paymentMethod = await PaymentMethod.create({
+            payment_method_id,
             name,
             type,
             bank_name,
-            user_id: req.user.user_id
+            user_id:user_id
         });
         res.status(201).json({
             success:true,
@@ -101,6 +116,14 @@ export const updatePaymentMethod = async (req,res) => {
     try {
         const {id} = req.params;
         const {name, type, bank_name} = req.body;
+        const user_id = req.user.user_id;
+
+        if (!id.startsWith(`${user_id}_pm_`)) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized access to this payment method"
+            });
+        }
 
         const paymentMethod = await PaymentMethod.findOne({
             where: {
@@ -119,7 +142,7 @@ export const updatePaymentMethod = async (req,res) => {
             const existingPayment = await PaymentMethod.findOne({
                 where: {
                     name,
-                    user_id: req.user.user_id,
+                    user_id: user_id,
                     payment_method_id: {
                         [Op.ne]: id // Exclude the current payment method
                     }
@@ -159,10 +182,17 @@ export const updatePaymentMethod = async (req,res) => {
 export const deletePaymentMethod = async (req,res) => {
     try {
         const {id} = req.params;
+        const user_id = req.user.user_id;
+        if (!id.startsWith(`${user_id}_pm_`)) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized access to this payment method"
+            });
+        }
         const paymentMethod = await PaymentMethod.findOne({
             where: {
                 payment_method_id: id,
-                user_id: req.user.user_id
+                user_id:user_id
             }
         });
         if(!paymentMethod) {

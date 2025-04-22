@@ -10,9 +10,9 @@ import {
 const router = express.Router();
 
 // Routes
-router.get('/', getAllPaymentMethods);
+router.get('/getpaymethods', getAllPaymentMethods);
 router.get('/:id', getPaymentMethodById);
-router.post('/', createPaymentmethod);
+router.post('/createpaymentMethod', createPaymentmethod);
 router.put('/:id', updatePaymentMethod);
 router.delete('/:id', deletePaymentMethod);
 
