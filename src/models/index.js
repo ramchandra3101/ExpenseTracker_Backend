@@ -1,8 +1,8 @@
-import User from "./User";
-import Category from "./Category";
-import Expense from "./Expense";
-import PaymentMethod from "./PaymentMethod";
-import Entry from "./Entry";
+import User from "./User.js";
+import Category from "./Category.js";
+import Expense from "./Expense.js";
+import PaymentMethod from "./PaymentMethod.js";
+import Entry from "./Entry.js";
 
 
 //One User has many categories
@@ -23,17 +23,6 @@ Expense.belongsTo(User, {
 });
 
 // One category has many expenses
-Category.hasMany(Expense, {
-    foreignKey: 'category',
-    sourceKey: 'category_id',
-  });
-  
-  // Each expense belongs to one category
-  Expense.belongsTo(Category, {
-    foreignKey: 'category',
-    targetKey: 'category_id',
-  });
-  
 
 
 //One paymentMethod used for many expenses
@@ -64,4 +53,4 @@ PaymentMethod.belongsTo(User, {
 });
 
 
-export { User, Category, Expense, PaymentMethod, Entry };
+export {User,Category, Expense, PaymentMethod};

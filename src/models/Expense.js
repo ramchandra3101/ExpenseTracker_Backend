@@ -1,5 +1,6 @@
 import {DataTypes} from '@sequelize/core';
 import {sequelize} from '../config/db.config.js';
+import Category from './Category.js';
 
 
 const Expense = sequelize.define('expense', {
@@ -11,9 +12,10 @@ const Expense = sequelize.define('expense', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    category: {
+    category_id: {
         type: DataTypes.STRING,
         allowNull: false,
+       
         
     },
     payment_method_id: {
@@ -65,9 +67,27 @@ const Expense = sequelize.define('expense', {
                 expense.expense_id = `${expense.user_id}_exp_${timestamp}`;
             }
         }
-    }
+    },
+  
+    
 
 });
+
+
+
+Expense.belongsTo(Category, {
+    foreignKey: 'category_id',
+    as: 'expense_category',
+    targetKey: 'category_id',
+  });
+
+// Define associations
+Category.hasMany(Expense, {
+    foreignKey: 'category_id',
+    as: 'expenses_category',
+    sourceKey: 'category_id',
+  });
+
 
 
 export default Expense;

@@ -11,7 +11,7 @@ const router = express.Router();
 
 // Routes
 router.get('/getpaymethods', getAllPaymentMethods);
-router.get('/:id', getPaymentMethodById);
+router.get('/getpaymethods/:id', getPaymentMethodById);
 router.post('/createpaymentMethod', createPaymentmethod);
 router.put('/:id', updatePaymentMethod);
 router.delete('/:id', deletePaymentMethod);

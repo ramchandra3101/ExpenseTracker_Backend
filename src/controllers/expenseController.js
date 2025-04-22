@@ -1,21 +1,13 @@
 import Expense from '../models/Expense.js';
 import Category from '../models/Category.js';
 import PaymentMethod from '../models/PaymentMethod.js';
+
 import {Op} from "@sequelize/core";
 
 // Association setup
-Expense.belongsTo(Category, {
-    foreignKey: 'category',
-    as: 'expense_category',
-    targetKey: 'category_id',
-});
-Expense.belongsTo(PaymentMethod, {
-    foreignKey: 'payment_method_id',
-    as: 'payment_method',
-    targetKey: 'payment_method_id',
-});
 
 export const getAllExpenses = async(req, res) => {
+    console.log("Association setup",Expense.associations);
     try {
         const user_id = req.user.user_id; // Make sure to use req.user.user_id
         
@@ -28,9 +20,20 @@ export const getAllExpenses = async(req, res) => {
             is_recurring,
         } = req.query;
 
-        const whereClause = {user_id: user_id};
         
-        if(start_date && end_date) {
+
+        const whereClause = {user_id: user_id};
+        if(!start_date && !end_date) {
+            const now = new Date();
+            const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            
+            whereClause.expense_date = {
+                [Op.between]: [firstDayOfMonth, lastDayOfMonth]
+            };
+        }
+        
+        else if(start_date && end_date) {
             whereClause.expense_date = {
                 [Op.between]: [new Date(start_date), new Date(end_date)]
             };   
@@ -47,7 +50,7 @@ export const getAllExpenses = async(req, res) => {
         if (category_id) {
             // If category_id is provided and it starts with the user's ID, use it directly
             if (category_id.startsWith(`${user_id}_cat_`)) {
-                whereClause.category = category_id;
+                whereClause.category_id = category_id;
             }
         }
 
@@ -62,21 +65,18 @@ export const getAllExpenses = async(req, res) => {
         }
 
         const expenses = await Expense.findAll({
-            where: whereClause,
             include: [
                 {
                     model: Category,
-                    as: 'expense_category',
-                    attributes: ['name', 'icon', 'color', 'is_income']  
+                    as: 'expense_category', // Use the alias defined in the association
+                    attributes: ['category_id', 'name', 'icon', 'color']
                 },
-                {
-                    model: PaymentMethod,
-                    as: 'payment_method',
-                    attributes: ['name', 'type', 'bank_name']
-                }
+               
             ],
             order: [["expense_date", 'DESC']],
+            logging: console.log // This will log the SQL query to your console
         });
+
 
         const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
         
@@ -99,6 +99,7 @@ export const getAllExpenses = async(req, res) => {
 export const createExpense = async(req, res) => {
     try {
         const user_id = req.user.user_id;
+        console.log("reqest paframes",req.params)
         
         const {
             category,

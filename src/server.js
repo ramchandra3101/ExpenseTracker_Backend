@@ -7,6 +7,7 @@ import categoryRoutes from './routes/categoryRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
 import paymentMethodRoutes from './routes/paymentMethodRoutes.js';
 
+
 import authenticate from './middleware/auth.js';
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 
+import Expense from './models/Expense.js';
 
 
 //Test route
