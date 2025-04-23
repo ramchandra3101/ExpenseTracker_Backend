@@ -1,6 +1,7 @@
 import {DataTypes} from '@sequelize/core';
 import {sequelize} from '../config/db.config.js';
 import Category from './Category.js';
+import PaymentMethod from './PaymentMethod.js';
 
 
 const Expense = sequelize.define('expense', {
@@ -68,6 +69,7 @@ const Expense = sequelize.define('expense', {
             }
         }
     },
+    schema: 'expensestrack'
   
     
 
@@ -79,6 +81,7 @@ Expense.belongsTo(Category, {
     foreignKey: 'category_id',
     as: 'expense_category',
     targetKey: 'category_id',
+    schema: 'expensestrack'
   });
 
 // Define associations
@@ -86,7 +89,26 @@ Category.hasMany(Expense, {
     foreignKey: 'category_id',
     as: 'expenses_category',
     sourceKey: 'category_id',
+    schema: 'expensestrack'
   });
+
+Expense.belongsTo(PaymentMethod, {
+    foreignKey: 'payment_method_id',
+    as: 'Expense_payment_method',
+    targetKey: 'payment_method_id',
+    schema: 'expensestrack'
+  });
+
+PaymentMethod.hasMany(Expense, {
+    foreignKey: 'payment_method_id',
+    as: 'Expense_payment_method',
+    sourceKey: 'payment_method_id',
+    schema: 'expensestrack'
+  });
+
+
+
+
 
 
 

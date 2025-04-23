@@ -32,7 +32,8 @@ const PaymentMethod = sequelize.define('payment_method', {
                 paymentMethod.payment_method_id = `${paymentMethod.user_id}_pm_${timestamp}`;
             }
         }
-    }
+    },
+    schema: 'expensestrack'
 
 });
 

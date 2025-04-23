@@ -46,7 +46,7 @@ const Category = sequelize.define('category', {
             }
         }
     },
-  
+    schema: 'expensestrack'
 })
 // Define associations
 export default Category;

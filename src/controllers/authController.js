@@ -81,6 +81,7 @@ export const SignUp = async(req, res) => {
 
 export const SignIn = async(req, res) => {
     try{
+        console.log("SignIn called", req.body);
         const {identifier, password} = req.body;
         if(!identifier || !password){
             return res.status(400).json({

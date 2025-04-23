@@ -63,6 +63,7 @@ const User = sequelize.define('user', {
                 }
             },
         },
+        schema: 'expensestrack'
     }
 );
 //Method to check if the password is correct

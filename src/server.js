@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 
-import Expense from './models/Expense.js';
+
 
 
 //Test route

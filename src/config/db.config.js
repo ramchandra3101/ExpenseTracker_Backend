@@ -21,7 +21,7 @@ export const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     port: 5432,
     logging: console.log,
-    schema: process.env.DB_SCHEMA,
+    
 });
 
 export const connectDB = async () => {

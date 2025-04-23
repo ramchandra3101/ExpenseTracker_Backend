@@ -7,7 +7,7 @@ import {Op} from "@sequelize/core";
 // Association setup
 
 export const getAllExpenses = async(req, res) => {
-    console.log("Association setup",Expense.associations);
+    
     try {
         const user_id = req.user.user_id; // Make sure to use req.user.user_id
         
@@ -65,14 +65,19 @@ export const getAllExpenses = async(req, res) => {
         }
 
         const expenses = await Expense.findAll({
-            include: [
-                {
-                    model: Category,
-                    as: 'expense_category', // Use the alias defined in the association
-                    attributes: ['category_id', 'name', 'icon', 'color']
-                },
-               
-            ],
+            where: whereClause,
+            include: [{
+                model: Category,
+                as: 'expense_category', // This should match your association alias
+                attributes: ['name', 'color', 'category_id'] // Specify which category fields you want
+            },{
+                model: PaymentMethod,
+                as: 'Expense_payment_method', // This should match your association alias
+                attributes: ['name', 'type', 'payment_method_id'] // Specify which payment method fields you want
+
+            }
+        ],
+            
             order: [["expense_date", 'DESC']],
             logging: console.log // This will log the SQL query to your console
         });
@@ -97,12 +102,13 @@ export const getAllExpenses = async(req, res) => {
 };
 
 export const createExpense = async(req, res) => {
+    console.log("Create expense request:", req.body); // Debugging line
     try {
         const user_id = req.user.user_id;
-        console.log("reqest paframes",req.params)
+        console.log(req.body)
         
         const {
-            category,
+            category_id,
             payment_method_id,
             amount,
             description,
@@ -110,23 +116,25 @@ export const createExpense = async(req, res) => {
             is_recurring,
             receipt,
             notes
-        } = req.body; 
+        } = req.body 
+
+        console.log(req.body)
     
-        if (!category || !payment_method_id || !amount || !expense_date) {
+        if (!category_id || !payment_method_id || !amount || !expense_date) {
             return res.status(400).json({
                 success: false,
                 message: "Category, payment method, amount, and date are required"
             });
         }
-        
+        console.log("Request body:", category_id, payment_method_id); // Debugging line
         // Verify that category exists and belongs to the user
         const categoryExists = await Category.findOne({
             where: {
-                category_id: category,
+                category_id: category_id,
                 user_id: user_id
             }
         });
-
+      
         if(!categoryExists) {
             return res.status(404).json({
                 success: false,
@@ -152,12 +160,12 @@ export const createExpense = async(req, res) => {
         // Generate a custom expense ID
         const timestamp = new Date().getTime();
         const expense_id = `${user_id}_exp_${timestamp}`;
-        
+        // Debugging line
         // Create the expense with custom ID
         const expense = await Expense.create({
             expense_id,
             user_id: user_id,
-            category,
+            category_id: category_id,
             payment_method_id,
             amount: parseFloat(amount),
             description,

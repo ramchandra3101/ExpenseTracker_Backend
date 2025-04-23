@@ -22,7 +22,7 @@ Expense.belongsTo(User, {
     foreignKey: 'user_id',
 });
 
-// One category has many expenses
+
 
 
 //One paymentMethod used for many expenses
