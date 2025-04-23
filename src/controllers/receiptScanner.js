@@ -46,7 +46,7 @@ export const scanReceipt = async (req, res) => {
             user : {user_id},
             body: extractedData,
         };
-        console.log('Expense request:', expenseRequest);
+        
 
         const expenseResponse = {
             status: function(statusCode){

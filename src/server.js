@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
 import paymentMethodRoutes from './routes/paymentMethodRoutes.js';
+import DeleteFiles from './services/flushfiles.js';
 
 
 import authenticate from './middleware/auth.js';

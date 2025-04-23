@@ -6,8 +6,8 @@ dotenv.config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 const receiptScan =async(imagePath, categories, paymentMethods)=>{
-    try{
-        console.log('Gemini receipt scanning started', imagePath);
+    try{  
+        console.log('Image path:', imagePath);
         const model = genAI.getGenerativeModel({model:'gemini-2.0-flash'});
         const imageData = fs.readFileSync(imagePath);
         const imagebase64 = imageData.toString('base64');
