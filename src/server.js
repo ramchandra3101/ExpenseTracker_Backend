@@ -6,7 +6,8 @@ import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
 import paymentMethodRoutes from './routes/paymentMethodRoutes.js';
-import DeleteFiles from './services/flushfiles.js';
+import helmet from 'helmet';
+
 
 
 import authenticate from './middleware/auth.js';
@@ -15,7 +16,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+app.use(helmet());
 
 
 
